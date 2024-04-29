@@ -37,39 +37,39 @@ async function run() {
     });
 
     app.get('/singleProduct/:id', async (req, res) => {
-      console.log(req.params.id)
-      const result = await itemCollection.findOne({_id:new ObjectId(req.params.id)})
+      console.log(req.params.id);
+      const result = await itemCollection.findOne({ _id: new ObjectId(req.params.id) });
       res.send(result);
     });
 
-    app.get('/item/:id', async(req, res) => {
+    app.get('/item/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id:new ObjectId(id)}
-      const result = await itemCollection.findOne(query)
-      res.send(result) 
-    })
+      const query = { _id: new ObjectId(id) };
+      const result = await itemCollection.findOne(query);
+      res.send(result);
+    });
 
-    app.put('/item/:id', async(req, res) =>{
+    app.put('/item/:id', async (req, res) => {
       const id = req.params.id;
-      const filter = {_id: new ObjectId(id) }
-      const options = {upsert: true};
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
       const updateProduct = req.body;
       const product = {
-        $set:{
+        $set: {
           image: updateProduct.image,
-          name: updateProduct.name, 
+          name: updateProduct.name,
           sub: updateProduct.sub,
           description: updateProduct.description,
           price: updateProduct.price,
-          rating:updateProduct.rating, 
-          custom: updateProduct.custom, 
-          time: updateProduct.time, 
+          rating: updateProduct.rating,
+          custom: updateProduct.custom,
+          time: updateProduct.time,
           status: updateProduct.status
         }
-      }
-      const result = await itemCollection.updateOne(filter, product, options)
+      };
+      const result = await itemCollection.updateOne(filter, product, options);
       res.send(result);
-    })
+    });
 
     app.post('/add', async (req, res) => {
       const newItem = req.body;
@@ -77,6 +77,14 @@ async function run() {
       const result = await itemCollection.insertOne(newItem);
       res.send(result);
     });
+
+    app.delete('/item/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await itemCollection.deleteOne(query);
+      res.send(result);
+    });
+
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
   }
