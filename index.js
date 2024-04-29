@@ -37,10 +37,39 @@ async function run() {
     });
 
     app.get('/singleProduct/:id', async (req, res) => {
-        console.log(req.params.id)
-        const result = await itemCollection.findOne({_id:new ObjectId(req.params.id)})
-        res.send(result);
-      });
+      console.log(req.params.id)
+      const result = await itemCollection.findOne({_id:new ObjectId(req.params.id)})
+      res.send(result);
+    });
+
+    app.get('/item/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id:new ObjectId(id)}
+      const result = await itemCollection.findOne(query)
+      res.send(result) 
+    })
+
+    app.put('/item/:id', async(req, res) =>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id) }
+      const options = {upsert: true};
+      const updateProduct = req.body;
+      const product = {
+        $set:{
+          image: updateProduct.image,
+          name: updateProduct.name, 
+          sub: updateProduct.sub,
+          description: updateProduct.description,
+          price: updateProduct.price,
+          rating:updateProduct.rating, 
+          custom: updateProduct.custom, 
+          time: updateProduct.time, 
+          status: updateProduct.status
+        }
+      }
+      const result = await itemCollection.updateOne(filter, product, options)
+      res.send(result);
+    })
 
     app.post('/add', async (req, res) => {
       const newItem = req.body;
