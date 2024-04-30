@@ -23,12 +23,19 @@ async function run() {
     console.log('Connected to MongoDB');
 
     const itemCollection = client.db('itemDB').collection('item');
+    const categoryCollection = client.db('categoriesDB').collection('catogories');
 
     app.get('/item', async (req, res) => {
       const cursor = itemCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get('/categories', async(req,res) =>{
+        const cursor = categoryCollection.find();
+        const result = await cursor.toArray();
+        res.send(result)
+    })
 
     app.get('/update/:email', async (req, res) => {
       console.log(req.params.email);
