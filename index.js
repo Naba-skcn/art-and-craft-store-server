@@ -36,7 +36,13 @@ async function run() {
         const result = await cursor.toArray();
         res.send(result)
     })
-
+    
+    app.get('/subcategory/:sub', async (req, res) => {
+        console.log(req.params);
+        const result = await itemCollection.find({ sub: req.params.sub }).toArray();
+        res.send(result);
+    });
+        
     app.get('/update/:email', async (req, res) => {
       console.log(req.params.email);
       const result = await itemCollection.find({ email: req.params.email }).toArray();
